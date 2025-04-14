@@ -16,7 +16,7 @@ spec:
       containers:
       - name: backend
         image: my-backend-app:latest # Replace with your actual backend image
-        imagePullPolicy: IfNotPresent # Or Always if you push frequently
+        imagePullPolicy: Never # Or Always if you push frequently
         ports:
         - containerPort: 8000
         env:

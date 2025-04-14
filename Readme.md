@@ -1,4 +1,4 @@
-This is a info on how to run the damn thing
+This is a info on how to run the damn thing(for intenal use only 😜)
 docker build -t my-backend-app . 
 k create ns webapp   
 kns webapp      

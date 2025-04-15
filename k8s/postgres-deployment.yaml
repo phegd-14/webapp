@@ -18,6 +18,13 @@ spec:
         image: postgres:latest # Or a specific PostgreSQL version
         ports:
         - containerPort: 5432
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
         env:
         - name: POSTGRES_USER
           valueFrom:

@@ -4,29 +4,24 @@ metadata:
   name: webapp-ingress
   namespace: webapp
   annotations:
-    kubernetes.io/ingress.class: "nginx" # Or your preferred Ingress controller
-    # Add other annotations as needed, e.g., for TLS termination
-    # nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
+  ingressClassName: nginx
   rules:
-  - host: mywebapp.com # Replace with your actual domain name
+  - host: mywebapp.local #desired hostname
     http:
       paths:
-      - path: /api
-        pathType: Prefix
+      - path: /api/?(.*)
+        pathType: ImplementationSpecific
         backend:
           service:
-            name: backend-service
+            name: backend
             port:
-              number: 80
-      - path: / # Catch-all for the frontend
-        pathType: Prefix
+              number: 8000
+      - path: /(.*)
+        pathType: ImplementationSpecific
         backend:
           service:
             name: frontend
             port:
-              number: 80
-  # tls: # Uncomment this section to configure TLS/SSL
-  # - hosts:
-  #   - your-domain.com
-  #   secretName: your-tls-secret # Name of the Kubernetes Secret containing your TLS certificate and key
+              number: 3000

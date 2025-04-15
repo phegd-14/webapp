@@ -1,14 +1,13 @@
-# Dockerfile.backend
-
-FROM python:3.11-slim
-
+# Build stage for FastAPI
+FROM python:3.13-alpine AS builder
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
 
-COPY / .
+COPY . . 
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["fastapi","run"]

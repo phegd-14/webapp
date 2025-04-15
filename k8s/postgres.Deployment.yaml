@@ -1,31 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: postgres
   namespace: webapp
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backend
+      app: postgres
   template:
     metadata:
       labels:
-        app: backend
+        app: postgres
     spec:
       containers:
-        - name: backend
-          image: my-backend-app
-          imagePullPolicy: Never
+        - name: postgres
+          image: postgres:latest
           ports:
-            - containerPort: 8000
-          resources:
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
-            requests:
-              memory: "256Mi"
-              cpu: "250m"
+            - containerPort: 5432
           env:
             - name: POSTGRES_USER
               valueFrom:
@@ -42,17 +34,31 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: POSTGRES_DB
-
-
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      volumes:  # This should be here, outside containers
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+  
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend
+  name: postgres
   namespace: webapp
 spec:
+  type: ClusterIP
   selector:
-    app: backend
+    app: postgres
   ports:
-    - port: 8000
-      targetPort: 8000
+    - port: 5432
+      targetPort: 5432

@@ -5,7 +5,6 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from pydantic import BaseModel
-import os
 
 app = FastAPI()
 
@@ -22,14 +21,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Get database credentials from environment variables sourced from the Secret
-DB_USER = os.environ.get("POSTGRES_USER")
-DB_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
-DB_HOST = os.environ.get("POSTGRES_HOST", "postgres")  # Default to 'postgres' service name
-DB_PORT = os.environ.get("POSTGRES_PORT", "5432")
-DB_NAME = os.environ.get("POSTGRES_DB", "postgres")
-
-DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+DATABASE_URL = "postgresql://myuser:password@fastapi-postgres:5432/fastapi_database"
 
 # SQLAlchemy setup
 engine = create_engine(DATABASE_URL)
@@ -49,7 +41,7 @@ try:
     Base.metadata.create_all(bind=engine)
 except Exception as e:
     print(f"Error creating tables: {e}")
-
+    
 @app.get("/tasks")
 def read_tasks():
     db = SessionLocal()
@@ -98,12 +90,13 @@ def delete_task(task_id: int):
     try:
         existing_task = db.query(Task).filter(Task.id == task_id).first()
         if not existing_task:
-            return {"error": "Task is not found"}
+            return {"error": "Task not found"}
         db.delete(existing_task)
         db.commit()
         return {"task_id": task_id, "status": "deleted"}
     finally:
         db.close()
 
+
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000) # Listen on all interfaces for Docker
+    uvicorn.run(app, host="127.0.0.1", port=8000)

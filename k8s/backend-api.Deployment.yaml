@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: fastapi-backend:1.0.2
+          image: fastapi-backend:1.0.3
           imagePullPolicy: Never
           ports:
             - containerPort: 8000
@@ -32,8 +32,6 @@ spec:
                 secretKeyRef:
                   name: webapp-secrets
                   key: DATABASE_URL
-
-
 
 ---
 apiVersion: v1

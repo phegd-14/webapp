@@ -8,10 +8,10 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-# Add CORS middleware
-origins = [
-    "http://localhost:5173",  # Allow requests from this origin
-]
+# Force table creation on startup
+@app.on_event("startup")
+def on_startup():
+    Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,7 +21,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DATABASE_URL = "postgresql://myuser:password@fastapi-postgres:5432/fastapi_database"
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 # SQLAlchemy setup
 engine = create_engine(DATABASE_URL)
@@ -38,6 +38,7 @@ class Task(Base):
 
 # Create tables
 try:
+    Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
 except Exception as e:
     print(f"Error creating tables: {e}")

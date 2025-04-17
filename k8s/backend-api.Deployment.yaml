@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: backendend:1.0.3
+          image: fastapi-backend:1.0.2
           imagePullPolicy: Never
           ports:
             - containerPort: 8000
@@ -27,21 +27,12 @@ spec:
               memory: "256Mi"
               cpu: "250m"
           env:
-            - name: POSTGRES_USER
+            - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_PASSWORD
-            - name: POSTGRES_DB
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_DB
+                  name: webapp-secrets
+                  key: DATABASE_URL
+
 
 
 ---

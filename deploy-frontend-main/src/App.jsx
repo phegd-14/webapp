@@ -7,7 +7,7 @@ function App() {
   const [error, setError] = useState('');
   const baseUrl = import.meta.env.VITE_API_URL;
   useEffect(() => {
-    fetch('baseUrl/tasks')
+    fetch('/tasks')
       .then((response) => response.json())
       .then((data) => setTasks(data.tasks))
       .catch((err) => setError('Failed to fetch tasks'));
@@ -19,7 +19,7 @@ function App() {
   };
 
   const addTask = () => {
-    fetch('baseUrl/tasks', {
+    fetch('/tasks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newTask),
@@ -33,7 +33,7 @@ function App() {
   };
 
   const deleteTask = (taskId) => {
-    fetch(`baseUrl/tasks/${taskId}`, {
+    fetch(`/tasks/${taskId}`, {
       method: 'DELETE',
     })
       .then(() => {

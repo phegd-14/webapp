@@ -27,6 +27,8 @@ RUN npm install -g serve
 # Copy built application from the builder stage
 COPY --from=builder /app/dist ./dist
 
+COPY serve.json ./
+
 # Expose the port serve will use
 EXPOSE 3000
 

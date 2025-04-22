@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/api/**", "destination": "/api/" }
+  ],
+  "proxy": [
+    {
+      "source": "/api/**",
+      "target": "http://backend-service:8000"
+    }
+  ]
+}

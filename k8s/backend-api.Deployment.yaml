@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: fastapi-backend:1.0.3
+          image: fastapi-backend:1.0.4
           imagePullPolicy: Never
           ports:
             - containerPort: 8000

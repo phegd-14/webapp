@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: myproject
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: webapp-back:1.0.0  # Replace this with your image
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000    # Assuming your backend is running on port 8000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          envFrom:
+            - secretRef:
+                name: postgres-secret  # Sensitive Postgres data from Secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: myproject
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 8000    # Exposing backend on port 8000 internally
+      targetPort: 8000
+  type: ClusterIP

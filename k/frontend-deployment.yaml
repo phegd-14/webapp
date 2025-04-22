@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: myproject
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: webapp-front:1.0.1  
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          env:
+            - name: VITE_API_BASE
+              value: "http://backend.myproject:8000"  # Replace this with the internal backend service URL if inside the same Kubernetes cluster
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: myproject
+spec:
+  selector:
+    app: frontend
+  ports:
+    - port: 80      # Expose externally (you can change this if needed)
+      targetPort: 3000
+  type: NodePort   # Change to NodePort if you don't need LoadBalancer in your environment

@@ -5,9 +5,11 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from pydantic import BaseModel
+from dotenv import load_dotenv
 import os
 
 app = FastAPI()
+load_dotenv()
 
 # Force table creation on startup
 @app.on_event("startup")

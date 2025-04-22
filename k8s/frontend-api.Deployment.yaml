@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: react-frontend:1.0.3
+          image: frontend:2.0.6
           imagePullPolicy: Never
           ports:
             - containerPort: 3000
@@ -28,15 +28,18 @@ spec:
               cpu: "125m"
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
   name: frontend
   namespace: webapp
 spec:
+  type: NodePort
   selector:
     app: frontend
   ports:
-  - port: 3000
-    targetPort: 3000
-  type: ClusterIP
+  - name: http
+    protocol: TCP 
+    port: 3000
+    nodePort: 30090

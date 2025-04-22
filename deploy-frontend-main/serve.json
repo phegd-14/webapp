@@ -5,7 +5,7 @@
   "proxy": [
     {
       "source": "/api/**",
-      "target": "http://backend-service:8000"
+      "target": "http://localhost:8000"
     }
   ]
 }

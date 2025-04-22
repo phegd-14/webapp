@@ -6,20 +6,25 @@ function App() {
   const [newTask, setNewTask] = useState({ name: '', date: '', status: '' });
   const [error, setError] = useState('');
 
+  const API_BASE = import.meta.env.VITE_API_BASE || 'http://backend.myproject:8000';  // Fallback to backend in cluster for dev
+
+  // Fetch tasks
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/tasks')
+    fetch(`${API_BASE}/tasks`)
       .then((response) => response.json())
       .then((data) => setTasks(data.tasks))
       .catch((err) => setError('Failed to fetch tasks'));
   }, []);
 
+  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewTask({ ...newTask, [name]: value });
   };
 
+  // Add task
   const addTask = () => {
-    fetch('http://127.0.0.1:8000/tasks', {
+    fetch(`${API_BASE}/tasks`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newTask),
@@ -32,8 +37,9 @@ function App() {
       .catch((err) => setError('Failed to add task'));
   };
 
+  // Delete task
   const deleteTask = (taskId) => {
-    fetch(`http://127.0.0.1:8000/tasks/${taskId}`, {
+    fetch(`${API_BASE}/tasks/${taskId}`, {
       method: 'DELETE',
     })
       .then(() => {

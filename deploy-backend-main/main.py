@@ -22,14 +22,19 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+try:
+    # POSTGRES_USER = os.getenv("POSTGRES_USER")
+    # POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+    # POSTGRES_HOST = ("postgres")  # default name of service in K8s
+    # POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
+    # POSTGRES_DB = os.getenv("POSTGRES_DB", "postgres")
 
-POSTGRES_USER = os.getenv("POSTGRES_USER")
-POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-POSTGRES_HOST = os.getenv("POSTGRES_HOST", "postgres")  # default name of service in K8s
-POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
-POSTGRES_DB = os.getenv("POSTGRES_DB", "postgres")
+    # DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+    DATABASE_URL="postgresql://postgres:123456@postgres:5432/postgres"
 
-DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+except Exception as e:
+    print(f"Error setting up database configuration: {e}")
+    DATABASE_URL = None
 
 # SQLAlchemy setup
 engine = create_engine(DATABASE_URL)

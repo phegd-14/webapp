@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import './App.css';
+import { getConfig } from './config';
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({ name: '', date: '', status: '' });
   const [error, setError] = useState('');
-  const baseUrl = import.meta.env.VITE_API_URL;
+  const baseUrl = getConfig('VITE_API_URL');
+
   useEffect(() => {
     fetch(`${baseUrl}/tasks`)
       .then((response) => response.json())

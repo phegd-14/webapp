@@ -1,36 +1,30 @@
+# Stage 1: Build React App
 FROM node:18-alpine AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (or yarn.lock)
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
 COPY . .
-
-# Build the application
 RUN npm run build
 
-# Stage 2: Production image
+# Stage 2: Serve the React App
 FROM node:18-alpine
 
-# Set working directory
 WORKDIR /app
 
-# Install serve globally (if not already done on your system)
+# Install serve globally
 RUN npm install -g serve
 
-# Copy built application from the builder stage
+# Copy build output
 COPY --from=builder /app/dist ./dist
 
-COPY serve.json ./
+# Copy default config.json to the root of dist/
+COPY public/config.json ./dist/config.json
 
-# Expose the port serve will use
+# Expose port
 EXPOSE 3000
 
-# Serve the build output
+# Serve the static files
 CMD ["serve", "-s", "dist", "-l", "3000"]
